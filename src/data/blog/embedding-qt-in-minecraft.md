@@ -1,7 +1,8 @@
 ---
 author: Barry Han
-pubDatetime: 2026-03-20T15:22:00Z
-modDatetime: 2026-03-20T16:52:45.934Z
+pubDatetime: 2026-03-20T07:22:00Z
+modDatetime: 2026-03-20T08:52:45.934Z
+timezone: Asia/Shanghai
 title: Embedding QT in Minecraft
 slug: embedding-qt-in-minecraft
 featured: true
