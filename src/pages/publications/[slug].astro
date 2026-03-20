@@ -1,0 +1,117 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import BackButton from "@/components/BackButton.astro";
+import BackToTopButton from "@/components/BackToTopButton.astro";
+import { SITE } from "@/config";
+
+export async function getStaticPaths() {
+  const pubs = await getCollection("publications");
+  return pubs.map(pub => ({
+    params: { slug: pub.id },
+    props: { pub },
+  }));
+}
+
+const { pub } = Astro.props;
+const { title, authors, venue, pubDate, keywords, links, highlight, highlightLabel } =
+  pub.data;
+
+const formattedDate = pubDate.toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+const { Content } = await render(pub);
+
+const LINK_LABELS: Record<string, string> = {
+  pdf: "PDF",
+  arxiv: "arXiv",
+  code: "Code",
+  project: "Homepage",
+  doi: "DOI",
+  slides: "Slides",
+};
+---
+
+<Layout title={`${title} | ${SITE.title}`}>
+  <Header />
+  <BackButton />
+  <main
+    id="main-content"
+    class:list={["app-layout pb-12", { "mt-8": !SITE.showBackButton }]}
+    data-pagefind-body
+  >
+    <div class="flex flex-wrap items-start gap-2">
+      <h1 class="text-2xl font-bold text-accent sm:text-3xl">{title}</h1>
+      {
+        highlight && (
+          <span class="mt-1.5 shrink-0 rounded border border-accent/50 px-1.5 py-0.5 text-xs font-medium text-accent">
+            {highlightLabel ?? "Highlight"}
+          </span>
+        )
+      }
+    </div>
+
+    <p class="mt-3 text-sm text-foreground/70">
+      {
+        authors.map((author, i) => (
+          <span>
+            {i > 0 && <span>, </span>}
+            {author === SITE.author ? (
+              <strong class="font-semibold text-foreground">{author}</strong>
+            ) : (
+              author
+            )}
+          </span>
+        ))
+      }
+    </p>
+
+    <p class="mt-1 text-sm italic text-foreground/60">{venue}, {formattedDate}</p>
+
+    {
+      keywords && keywords.length > 0 && (
+        <div class="mt-3 flex flex-wrap gap-1.5">
+          {keywords.map(kw => (
+            <span class="rounded border border-keyword/40 px-2 py-0.5 text-xs font-medium text-keyword">
+              {kw}
+            </span>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      links && Object.keys(links).length > 0 && (
+        <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1">
+          {(Object.entries(links) as [string, string][]).map(([key, href]) => (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm font-bold text-accent underline decoration-2 underline-offset-2 hover:opacity-75"
+            >
+              {LINK_LABELS[key] ?? key}
+            </a>
+          ))}
+        </div>
+      )
+    }
+
+    <hr class="my-8 border-dashed" />
+
+    <article
+      id="article"
+      class="app-prose w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+    >
+      <Content />
+    </article>
+
+    <BackToTopButton />
+  </main>
+  <Footer />
+</Layout>

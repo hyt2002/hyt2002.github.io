@@ -1,0 +1,49 @@
+---
+import { getCollection } from "astro:content";
+import Main from "@/layouts/Main.astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import PublicationCard from "@/components/PublicationCard.astro";
+import { SITE } from "@/config";
+
+if (!SITE.showPublications) {
+  return Astro.redirect("/404");
+}
+
+const allPubs = await getCollection("publications");
+
+// Group by year, sorted descending
+const grouped = allPubs.reduce<Record<number, typeof allPubs>>((acc, pub) => {
+  const y = pub.data.pubDate.getFullYear();
+  if (!acc[y]) acc[y] = [];
+  acc[y].push(pub);
+  return acc;
+}, {});
+
+const sortedYears = Object.keys(grouped)
+  .map(Number)
+  .sort((a, b) => b - a);
+
+---
+
+<Layout title={`Publications | ${SITE.title}`}>
+  <Header />
+  <Main pageTitle="Publications" pageDesc="My academic papers and research.">
+    {
+      sortedYears.map(year => (
+        <section class="mb-10">
+          <h2 class="mb-5 border-b border-border pb-2 text-xl font-bold">
+            {year}
+          </h2>
+          <ul>
+            {grouped[year].map(pub => (
+              <PublicationCard {...pub} />
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </Main>
+  <Footer />
+</Layout>
