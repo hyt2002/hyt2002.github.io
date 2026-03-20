@@ -13,6 +13,10 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
   <Header />
   <Main pageTitle="Search" pageDesc="Search any article ...">
     <div id="pagefind-search" transition:persist data-backurl={backUrl}></div>
+    <div id="search-placeholder" class="flex flex-col items-center justify-center py-8">
+      <img src="/cosmos.png" alt="Explore the cosmos" class="w-48" />
+      <p class="mt-4 text-sm text-foreground/50">Start typing to explore...</p>
+    </div>
   </Main>
   <Footer />
 </Layout>
@@ -62,18 +66,38 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
       const query = params.get("q");
       if (query) {
         search.triggerSearch(query);
+        hidePlaceholder();
       }
 
       // Reset search param if search input is cleared
       const searchInput = document.querySelector(".pagefind-ui__search-input");
       const clearButton = document.querySelector(".pagefind-ui__search-clear");
-      searchInput?.addEventListener("input", resetSearchParam);
-      clearButton?.addEventListener("click", resetSearchParam);
+      searchInput?.addEventListener("input", handleSearchInput);
+      clearButton?.addEventListener("click", handleClear);
 
-      function resetSearchParam(e: Event) {
-        if ((e.target as HTMLInputElement)?.value.trim() === "") {
+      function handleSearchInput(e: Event) {
+        const value = (e.target as HTMLInputElement)?.value.trim();
+        if (value === "") {
           history.replaceState(history.state, "", window.location.pathname);
+          showPlaceholder();
+        } else {
+          hidePlaceholder();
         }
+      }
+
+      function handleClear() {
+        history.replaceState(history.state, "", window.location.pathname);
+        showPlaceholder();
+      }
+
+      function hidePlaceholder() {
+        const placeholder = document.querySelector("#search-placeholder");
+        if (placeholder) (placeholder as HTMLElement).style.display = "none";
+      }
+
+      function showPlaceholder() {
+        const placeholder = document.querySelector("#search-placeholder");
+        if (placeholder) (placeholder as HTMLElement).style.display = "flex";
       }
     });
   }
