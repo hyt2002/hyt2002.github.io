@@ -13,7 +13,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-package-lock.json
 pnpm-lock.yaml
 
 # environment variables
@@ -27,5 +26,4 @@ pnpm-lock.yaml
 .idea/
 
 # pagefind
-
 public/pagefind
