@@ -1,13 +1,14 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { slugifyStr } from "@/utils/slugify";
+import { getPublicationPath } from "@/utils/getPath";
 import { SITE } from "@/config";
 
 type Props = {
   variant?: "h2" | "h3";
 } & CollectionEntry<"publications">;
 
-const { variant: Heading = "h3", id, data } = Astro.props;
+const { variant: Heading = "h3", id, data, filePath } = Astro.props;
 const { title, authors, venue, pubDate, tldr, keywords, links, highlight, highlightLabel } =
   data;
 
@@ -25,7 +26,7 @@ const LINK_LABELS: Record<string, string> = {
   <div class="flex flex-wrap items-start gap-2">
     <Heading class="text-lg font-semibold leading-snug">
       <a
-        href={`/publications/${id}`}
+        href={getPublicationPath(id, filePath)}
         class="text-accent decoration-dashed underline-offset-4 hover:underline"
       >
         {title}
