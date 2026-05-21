@@ -4,7 +4,7 @@ pubDatetime: 2026-05-21T07:22:00Z
 modDatetime: 2026-05-21T08:52:45.934Z
 timezone: Asia/Shanghai
 title: 《我是人》
-featured: true
+featured: false
 draft: false
 tags:
   - Funny
