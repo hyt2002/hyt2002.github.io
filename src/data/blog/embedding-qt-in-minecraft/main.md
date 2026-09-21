@@ -1,7 +1,7 @@
 ---
 author: Barry Han
 pubDatetime: 2026-03-20T07:22:00Z
-modDatetime: 2026-03-20T08:52:45.934Z
+modDatetime: 2026-09-21T08:52:45.934Z
 timezone: Asia/Shanghai
 title: Embedding QT in Minecraft
 featured: true
@@ -13,6 +13,14 @@ description:
   I'm trying running QT Applications in Minecraft natively.
 ---
 
-Native QT in Minecraft. WIP.
+Native Mobile OS in Minecraft. WIP.
 
-![Qml Application is running in Minecraft natively.](./luminos.png)
+# 2026.9.21
+
+LuminOS Prototype.
+
+![LuminOS Launcher.](./luminos_launcher.png)
+
+![LuminOS Launcher.](./luminos_systemui.png)
+
+![LuminOS Launcher.](./luminos_camera.png)
